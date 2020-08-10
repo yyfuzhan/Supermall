@@ -1,14 +1,16 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav">
-      <div slot="center">购物街</div>
+      <div slot="center" >购物街</div>
     </nav-bar>
-    <home-swiper :banners='banners'></home-swiper>
-    <Recommend-view :recommend="recommends"></Recommend-view>
-    <Feature-view></Feature-view>
-    <tabcontrol :titles="['流行','新款','精选']" @tabClick='tabClick'></tabcontrol>
-     <goodsList :goods='goods[currenttype].list'></goodsList>
-
+    <scroll class="wrapper" ref="scroll" :probetype="3" @scroll="contentscroll" :pull-up-load="true" @pullup="pullup">
+      <home-swiper :banners='banners'></home-swiper>
+      <Recommend-view :recommend="recommends"></Recommend-view>
+      <Feature-view></Feature-view>
+      <tabcontrol :titles="['流行','新款','精选']" @tabClick='tabClick'></tabcontrol>
+      <goodsList :goods='goods[currenttype].list'></goodsList>
+    </scroll>
+    <back-top @click.native="backClick" v-show="isBackTop"></back-top>
   </div>
 </template>
 
@@ -18,8 +20,10 @@
   import FeatureView from './childcpn/FeatureView.vue'
 
   import NavBar from '../../components/common/navbar/NavBar.vue'
+  import scroll from '../../components/common/scroll/scroll.vue'
   import tabcontrol from '../../components/content/tabcontrol/tabcontrol.vue'
   import goodsList from '../../components/content/goods/goodsList.vue'
+  import backTop from '../../components/content/backtop/backTop.vue'
 
   import {getHomeMultidata, getHomeGoods} from '../../network/home.js'
   export default {
@@ -29,8 +33,10 @@
       RecommendView,
       FeatureView,
       NavBar,
+      scroll,
       tabcontrol,
       goodsList,
+      backTop
     },
     data() {
       return {
@@ -50,7 +56,8 @@
             list: []
           }
         },
-        currenttype:'pop'
+        currenttype:'pop',
+        isBackTop:false
       }
     },
 
@@ -71,6 +78,16 @@
            this.currenttype='sell'
         }
 			},
+      backClick(){
+        this.$refs.scroll.scrollTo(0,0)
+      },
+      contentscroll(position){
+        this.isBackTop=-position.y>1000
+      },
+      pullup(){
+        console.log('拉取下一页')
+        this.gethomegoods(this.currenttype)
+      },
       //请求banner和recommend的数据
       gethomemultidata() {
         getHomeMultidata({}).then(res => {
@@ -84,6 +101,7 @@
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.data.list)
           this.goods[type].page ++
+          this.$refs.scroll.scroll.finishPullUp()
         })
       }
     }
@@ -93,6 +111,8 @@
 <style>
   #home {
     padding-top: 44px;
+    position: relative;
+    height: 100vh;
   }
 
   .home-nav {
@@ -103,7 +123,13 @@
     right: 0;
     top: 0;
     z-index: 9;
-
-
+  }
+  .wrapper{
+    overflow: hidden;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
   }
 </style>

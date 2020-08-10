@@ -109,8 +109,22 @@
   import BScroll from 'better-scroll'
   export default {
     name: 'category',
+    data(){
+     return{
+       scroll:null
+      }
+    },
     mounted() {
-      new BScroll(document.querySelector('.wrapper'))
+      this.scroll=new BScroll(document.querySelector('.wrapper'),{
+        probeType:3,
+        pullUpLoad:true
+      }),
+      this.scroll.on('scroll',(position)=>{
+        console.log('position')
+      })
+      this.scroll.on('pullingUp',()=>{
+        console.log('11')
+      })
     }
   }
 </script>
@@ -119,5 +133,6 @@
   .wrapper {
     height: 150px;
     background-color: red;
+    overflow: hidden;
   }
 </style>
