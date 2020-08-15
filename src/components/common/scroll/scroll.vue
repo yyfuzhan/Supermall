@@ -30,10 +30,12 @@
         probeType:this.probetype,
         pullUpLoad:this.pullUpLoad,
         click:true
-      }),
+      })
+      if(this.probetype===2||this.probetype===3){
       this.scroll.on('scroll',(position)=>{
        this.$emit('scroll',position)
-      }),
+      })
+      }
       this.scroll.on('pullingUp',()=>{
         this.$emit('pullup')
       })
@@ -41,6 +43,9 @@
     methods:{
       scrollTo(x,y,time=500){
         this.scroll.scrollTo(x,y,time)
+      },
+      refresh(){
+        this.scroll.refresh()
       }
     }
 	}

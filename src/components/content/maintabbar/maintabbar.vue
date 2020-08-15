@@ -38,6 +38,6 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	@import url("../../../assets/css/base.css");
 </style>

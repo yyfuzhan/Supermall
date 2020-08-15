@@ -129,7 +129,7 @@
   }
 </script>
 
-<style>
+<style scoped="scoped">
   .wrapper {
     height: 150px;
     background-color: red;

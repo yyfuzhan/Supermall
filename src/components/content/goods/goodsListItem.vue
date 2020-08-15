@@ -1,14 +1,14 @@
 <template>
 	<div class="goodsListItem">
 
-		<a :href="goodslist.link">
-		  <img :src="goodslist.show.img" alt="">
+		<div @click="itemClick">
+		  <img :src="showimg" alt="" @load="imgload">
       <div class="goods-info">
 		  <p class="tile">{{goodslist.title}}</p>
 		  <span class="price">{{goodslist.price}}</span>
 		  <span class="collect">{{goodslist.cfav}}</span>
       </div>
-		</a>
+		</div>
 
 	</div>
 </template>
@@ -23,11 +23,25 @@
 		      return {}
 		    }
 		  }
-		}
+		},
+    computed:{
+      showimg(){
+        return this.goodslist.image ||  this.goodslist.show.img
+      }
+    },
+    methods:{
+      imgload(){
+        //发射一个事件 到事件总线
+        this.$bus.$emit('imgloadfinish')
+      },
+      itemClick(){
+        this.$router.push('/detail/' + this.goodslist.iid)
+      }
+    }
 	}
 </script>
 
-<style>
+<style scoped>
   .goodsListItem{
   width: 48%;
   padding-bottom: 40px;
