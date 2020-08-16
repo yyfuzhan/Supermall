@@ -25,6 +25,8 @@
   import backTop from '../../components/content/backtop/backTop.vue'
 
   import {getHomeMultidata, getHomeGoods} from '../../network/home.js'
+  import {imgLoadMixin} from '../../common/mixin.js'
+
   export default {
     name: 'home',
     components: {
@@ -37,6 +39,7 @@
       goodsList,
       backTop,
     },
+    mixins:[imgLoadMixin],
     data() {
       return {
         banners: [],
@@ -59,7 +62,8 @@
         isBackTop:false,
         offsetTop:0,
         isFixed:false,
-        saveY:''
+        saveY:'',
+        imgloadlisten:null
       }
     },
 
@@ -71,10 +75,7 @@
       //接收$bus传来的img加载事件。然后去scroll中做刷新
     },
     mounted(){
-      const refresh=this.debounce(this.$refs.scroll.refresh,50)
-      this.$bus.$on('imgloadfinish',()=>{
-       refresh()
-      })
+      //这里的东西因为和detail页面重复 所以封装在了mixin中做了混入
     },
     activated(){
       this.$refs.scroll.scrollTo(0,this.saveY,3000)
@@ -82,17 +83,9 @@
     },
     deactivated(){
       this.saveY=this.$refs.scroll.scroll.y
+      this.$bus.$off('imgloadfinish',this.imgloadlisten)
     },
     methods: {
-      debounce(func,delay){
-        let timer=null
-        return function(...args){
-          if(timer) clearTimeout(timer)
-          timer=setTimeout(()=>{
-            func.apply(this,args)
-          },delay)
-        }
-      },
 			//tabControl点击事件
 			tabClick(index){
 				if(index==0){

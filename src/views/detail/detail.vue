@@ -1,43 +1,49 @@
 <template>
 	<div id="detail"><!-- 外层设置相对定位 -->
-    <detailnavbar class="detail-nav"></detailnavbar>
+    <detail-navbar class="detail-nav"></detail-navbar>
     <scroll class="content" ref="scroll"> <!-- 一定要设置个高度（即”滚动区域“） -->
-      <detailswiper :topimages="topimage"></detailswiper>
+      <detail-swiper :topimages="topimage"></detail-swiper>
       <detail-base-info :goods="Goods"></detail-base-info>
-      <shopinfo :shop="shopInfo"></shopinfo>
-      <detailinfo :detailinfo="detailinfo" @imgload="imgload"></detailinfo>
-      <detailparamsinfo :paramInfo="itemParams"></detailparamsinfo>
-      <detailcommentinfo :commentinfo="commentinfo"></detailcommentinfo>
+      <detail-shop-info :shop="shopInfo"></detail-shop-info>
+      <detail-info :detailinfo="detailinfo" @imgload="imgload"></detail-info>
+      <detail-paramsinfo :paramInfo="itemParams"></detail-paramsinfo>
+      <detail-commentinfo :commentinfo="commentinfo"></detail-commentinfo>
       <goods-list :goods="recommend"></goods-list>
     </scroll>
 	</div>
 </template>
 
 <script>
-  import detailnavbar from './childcpn/detailnavbar.vue'
-  import {getdetail,getrecommend,Goods,Shop,Param} from '../../network/detail.js'
-  import detailswiper from './childcpn/detailswiper.vue'
+  import detailNavbar from './childcpn/detailnavbar.vue'
+  import detailSwiper from './childcpn/detailswiper.vue'
   import detailBaseInfo from './childcpn/detailBaseInfo.vue'
-  import shopinfo from './childcpn/shopinfo.vue'
+  import detailShopInfo from './childcpn/shopinfo.vue'
+  import detailInfo from './childcpn/detailinfo.vue'
+  import detailParamsinfo from './childcpn/detailparamsinfo.vue'
+  import detailCommentinfo from './childcpn/detailcommentinfo.vue'
+
   import scroll from '../../components/common/scroll/scroll.vue'
-  import detailinfo from './childcpn/detailinfo.vue'
-  import detailparamsinfo from './childcpn/detailparamsinfo.vue'
-  import detailcommentinfo from './childcpn/detailcommentinfo.vue'
   import goodsList from '../../components/content/goods/goodsList.vue'
+
+  import {getdetail,getrecommend,Goods,Shop,Param} from '../../network/detail.js'
+  //导入封装好的混入文件
+  import {imgLoadMixin} from '../../common/mixin.js'
 
 	export default {
 		name:'detail',
     components: {
-      detailnavbar,
-      detailswiper,
+      detailNavbar,
+      detailSwiper,
       detailBaseInfo,
-      shopinfo,
+      detailShopInfo,
+      detailInfo,
+      detailParamsinfo,
+      detailCommentinfo,
       scroll,
-      detailinfo,
-      detailparamsinfo,
-      detailcommentinfo,
       goodsList
     },
+    //以数组形式存放
+    mixins:[imgLoadMixin],
     data(){
       return{
         iid:null,
@@ -47,7 +53,8 @@
         detailinfo:{},
         itemParams:{},
         commentinfo:{},
-        recommend:[]
+        recommend:[],
+        imgloadlisten:null
       }
     },
     created(){
@@ -73,8 +80,15 @@
       })
 
     },
+    destroyed(){
+      this.$bus.$off('imgloadfinish',this.imgloadlisten)
+    },
+    mounted(){
+    //这里的东西因为和home页面重复 所以封装在了mixin中做了混入
+    },
 
     methods:{
+
       imgload(){
         this.$refs.scroll.refresh()
       }

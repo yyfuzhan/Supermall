@@ -32,7 +32,12 @@
     methods:{
       imgload(){
         //发射一个事件 到事件总线
-        this.$bus.$emit('imgloadfinish')
+         this.$bus.$emit('imgloadfinish')
+        // if(this.$route.path.indexOf('/home')){
+        //   this.$bus.$emit('imgloadfinish')
+        // }else if(this.$route.path.indexOf('/detail')){
+        //   this.$bus.$emit('detailimgloadfinish')
+        // }
       },
       itemClick(){
         this.$router.push('/detail/' + this.goodslist.iid)
