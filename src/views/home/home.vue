@@ -2,7 +2,7 @@
   <div id="home">
     <nav-bar class="home-nav"><div slot="center" >购物街</div></nav-bar>
     <tabcontrol :titles="['流行','新款','精选']" @tabClick='tabClick' ref="tabcontrol1" v-show="isFixed"></tabcontrol>
-    <scroll class="wrapper" ref="scroll" :probetype="3" @scroll="contentscroll" :pull-up-load="true" @pullup="pullup">
+    <scroll class="wrapper" ref="scroll" :probetype="3" @scroll="scroll" :pull-up-load="true" @pullup="pullup">
       <home-swiper :banners='banners' @swiperimgload="swiperimgload"></home-swiper>
       <Recommend-view :recommend="recommends"></Recommend-view>
       <Feature-view></Feature-view>
@@ -22,10 +22,9 @@
   import scroll from '../../components/common/scroll/scroll.vue'
   import tabcontrol from '../../components/content/tabcontrol/tabcontrol.vue'
   import goodsList from '../../components/content/goods/goodsList.vue'
-  import backTop from '../../components/content/backtop/backTop.vue'
 
   import {getHomeMultidata, getHomeGoods} from '../../network/home.js'
-  import {imgLoadMixin} from '../../common/mixin.js'
+  import {imgLoadMixin,backTopMixin} from '../../common/mixin.js'
 
   export default {
     name: 'home',
@@ -37,9 +36,8 @@
       scroll,
       tabcontrol,
       goodsList,
-      backTop,
     },
-    mixins:[imgLoadMixin],
+    mixins:[imgLoadMixin,backTopMixin],
     data() {
       return {
         banners: [],
@@ -101,7 +99,7 @@
       backClick(){
         this.$refs.scroll.scrollTo(0,0)
       },
-      contentscroll(position){
+      scroll(position){
         this.isBackTop=-position.y>1000
         this.isFixed =-position.y>this.offsetTop
 
@@ -126,7 +124,7 @@
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.data.list)
           this.goods[type].page ++
-          this.$refs.scroll.scroll.finishPullUp()
+          this.$refs.scroll.finishPullUp()
         })
       }
     }

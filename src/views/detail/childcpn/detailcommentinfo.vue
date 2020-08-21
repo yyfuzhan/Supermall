@@ -40,7 +40,7 @@
         //对date进行格式化
         return formatDate(date,'yyyy-MM-dd hh:mm')
       }
-    }
+    },
 	}
 </script>
 
