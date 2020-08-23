@@ -15,6 +15,7 @@
     </scroll>
     <detail-bottom-bar @addCart="addCart"></detail-bottom-bar>
     <back-top @click.native="backClick" v-show="isBackTop"></back-top>
+     <toast :message="message" :show="show"></toast>
   </div>
 </template>
 
@@ -30,6 +31,7 @@
 
   import scroll from '../../components/common/scroll/scroll.vue'
   import goodsList from '../../components/content/goods/goodsList.vue'
+  import toast from '../../components/common/toast.vue'
 
   import {
     getdetail,
@@ -55,7 +57,8 @@
       detailCommentinfo,
       scroll,
       goodsList,
-      detailBottomBar
+      detailBottomBar,
+      toast
     },
     //以数组形式存放
     mixins: [imgLoadMixin,backTopMixin],
@@ -75,6 +78,8 @@
         detailoffsetTop1:0,
         detailoffsetTop2:0,
         detailoffsetTop3:0,
+        message:'',
+        show:false
       }
     },
     created() {
@@ -154,7 +159,13 @@
         obj.desc=this.Goods.desc
         obj.price=this.Goods.nowPrice
         obj.iid=this.iid
-        this.$store.dispatch('addcart',obj)
+        this.$store.dispatch('addcart',obj).then(res=>{
+          this.show=true
+          this.message=res
+          setTimeout(()=>{
+            this.show=false
+          },1500)
+        })
       }
     }
   }

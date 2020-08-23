@@ -5,7 +5,7 @@
       <span>全选</span>
     </div>
     <div class="total">总计：{{totalprice}}</div>
-    <div class="calc">去计算({{checklength}})</div>
+    <div class="calc" @click="tototal">去计算({{checklength}})</div>
 
 	</div>
 </template>
@@ -40,6 +40,9 @@
         }else{//有部分不选中
           this.$store.state.cartlist.forEach(item=>item.checked=true)
         }
+      },
+      tototal(){
+        this.$emit('tototal')
       }
     }
 	}

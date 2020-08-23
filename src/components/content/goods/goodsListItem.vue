@@ -2,7 +2,8 @@
 	<div class="goodsListItem">
 
 		<div @click="itemClick">
-		  <img :src="showimg" alt="" @load="imgload">
+      <!-- v-lazy跟：scr的不同之处就是lazy用了懒加载 -->
+		  <img v-lazy="showimg" alt="" @load="imgload">
       <div class="goods-info">
 		  <p class="tile">{{goodslist.title}}</p>
 		  <span class="price">{{goodslist.price}}</span>
