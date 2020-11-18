@@ -1,7 +1,9 @@
 <template>
-  <div class="category">
+  <div id="category">
     <nav-bar class="nav-bar"><div slot="center">商品分类</div></nav-bar>
-    <tab-menu :categories="categories"></tab-menu>
+    <div class="content">
+       <tab-menu :categories="categories"></tab-menu>
+    </div>
   </div>
 </template>
 
@@ -22,7 +24,6 @@
     },
     created(){
       this.getcategory()
-
     },
     methods:{
       getcategory(){
@@ -35,8 +36,20 @@
 </script>
 
 <style scoped="scoped">
+  #category {
+    height: 100vh;
+  }
   .nav-bar{
     background-color: var(--color-tint);
     color: white;
+  }
+  .content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 44px;
+    bottom: 49px;
+    overflow: hidden;
+    display: flex;
   }
 </style>

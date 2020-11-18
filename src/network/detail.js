@@ -1,7 +1,7 @@
 import {request} from './request.js'
 export function getdetail(iid) {
   return request({
-    url: '/api/x6/detail',
+    url: '/api/h8/detail',
     params:{
       iid
     }
@@ -10,7 +10,7 @@ export function getdetail(iid) {
 
 export function getrecommend() {
   return request({
-    url: '/api/x6/recommend'
+    url: '/api/h8/recommend'
   })
 }
 
